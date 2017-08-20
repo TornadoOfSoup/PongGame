@@ -5,28 +5,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Game extends JPanel{
+public class Game extends JFrame{
 
-    static int x, y;
-    static int xVelocity, yVelocity;
+    static Panel gamePanel;
+
+    public Game () {
+        setTitle("Pong");
+        setSize(500, 700);
+        setLayout(new BorderLayout());
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+    }
 
     public static void main(String[] args) {
         titleScreen();
     }
 
-    public static void stopBall() {
-        xVelocity = 0;
-        yVelocity = 0;
-    }
 
     public static void titleScreen() {
-        JFrame titleFrame = new JFrame("Pong");
-        titleFrame.setLayout(new BorderLayout());
-        titleFrame.setSize(500, 700);
-        titleFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        titleFrame.setResizable(false);
-
-        titleFrame.getContentPane().setBackground(Color.BLACK);
+        gamePanel.setBackground(Color.BLACK);
 
         JLabel titleLabel = new JLabel("PONG");
         titleLabel.setForeground(Color.GRAY);
@@ -49,12 +46,12 @@ public class Game extends JPanel{
         playGameButton.setHorizontalAlignment(JButton.CENTER);
         playGameButton.setVerticalAlignment(JButton.BOTTOM);
 
-        titleFrame.add(titleLabel, BorderLayout.PAGE_START);
-        titleFrame.add(playGameButton, BorderLayout.PAGE_END);
+        gamePanel.add(titleLabel, BorderLayout.PAGE_START);
+        gamePanel.add(playGameButton, BorderLayout.PAGE_END);
 
-        titleFrame.setVisible(true);
+        gamePanel.setVisible(true);
 
-        titleFrame.addMouseListener(new MouseAdapter() {
+        gamePanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 System.out.println(e.getX() + ", " + e.getY());
