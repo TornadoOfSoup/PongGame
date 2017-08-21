@@ -2,75 +2,83 @@ package com.company;
 
 import javax.swing.*;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Game extends JFrame{
+/**
+ * Created by RPGenius on 8/20/2017.
+ */
+public class Game extends JPanel implements KeyListener, ActionListener{
+    int playerCount;
+    Player player1;
+    Player player2;
 
-    static Panel gamePanel;
-
-    public Game () {
-        setTitle("Pong");
-        setSize(500, 700);
-        setLayout(new BorderLayout());
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
+    public Game(int numOfPlayers, Pong pong) {
+        playerCount = numOfPlayers;
+        startGame(pong);
     }
 
-    public static void main(String[] args) {
-        titleScreen();
+    public Game(Pong pong) {
+        playerCount = 1;
+        startGame(pong);
     }
 
-
-    public static void titleScreen() {
-        gamePanel.setBackground(Color.BLACK);
-
-        JLabel titleLabel = new JLabel("PONG");
-        titleLabel.setForeground(Color.GRAY);
-        titleLabel.setFont(new Font("Papyrus", Font.BOLD, 100));
-
-        titleLabel.setVerticalAlignment(JLabel.TOP);
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        titleLabel.setLocation(0,0);
-
-
-        JButton playGameButton = new JButton("Play Game");
-
-        playGameButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-        playGameButton.setBackground(Color.DARK_GRAY);
-        playGameButton.setBorder(BorderFactory.createLineBorder(new Color(90, 90, 90), 2));
-        playGameButton.setForeground(new Color(200, 200, 200));
-
-        playGameButton.setFocusPainted(false);
-
-        playGameButton.setHorizontalAlignment(JButton.CENTER);
-        playGameButton.setVerticalAlignment(JButton.BOTTOM);
-
-        gamePanel.add(titleLabel, BorderLayout.PAGE_START);
-        gamePanel.add(playGameButton, BorderLayout.PAGE_END);
-
-        gamePanel.setVisible(true);
-
-        gamePanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                System.out.println(e.getX() + ", " + e.getY());
-            }
-        });
-
-        playGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(e.getActionCommand());
-                gameScreen();
-            }
-        });
+    public void startGame(Pong pong) {
+        this.setSize(pong.gameWidth, pong.gameHeight);
+        this.setBackground(Color.BLACK);
+        player1 = new Player(1, pong, KeyEvent.VK_W, KeyEvent.VK_S);
+        player2 = new Player(2, pong, KeyEvent.VK_UP, KeyEvent.VK_DOWN);
+        this.setVisible(true);
     }
 
-    public static void gameScreen() {
-        JFrame gameFrame = new JFrame("Pong");
-        Paddle paddle1 = new Paddle(1);
+    @Override
+    public void keyTyped(KeyEvent e) {
 
-        Rectangle player1 = new Rectangle(100, 20);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == player1.getUpKey()) {
+            player1.moveUp(1);
+        } else if (e.getKeyCode() == player1.getDownKey()) {
+            player1.moveDown(1);
+        } else if (e.getKeyCode() == player2.getUpKey()) {
+            player2.moveUp(1);
+        } else if (e.getKeyCode() == player2.getDownKey()) {
+            player2.moveDown(1);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        update();
+        repaint();
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        paintPaddle(player1, g);
+        paintPaddle(player2, g);
+
+
+    }
+
+    public void paintPaddle(Player player, Graphics g) {
+        g.fillRect(player.getxPos(), player.getyPos(), player.getPaddleWidth(), player.getPaddleHeight());
+    }
+
+    public void update() {
+
     }
 }
